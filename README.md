@@ -34,7 +34,7 @@ docker run -d \
 ## check registration and end point
   pjsip show registrations
   pjsip show endpoints
-# Record audio using mac OS recorder app and convert to aterisk  compatible 8000 hz wave file , mono, 16 bit, 1 channel
+## Record audio using mac OS recorder app and convert to aterisk  compatible 8000 hz wave file , mono, 16 bit, 1 channel
 ffmpeg -i input.m4a -ar 8000 -ac 1 -sample_fmt s16 output.wav
 
 ## Copy your wav files
