@@ -31,7 +31,6 @@ curl ifconfig.me
 nc -v -u -z -w 3 192.168.86.112 5060
 nc -zv 192.168.86.112 8088
 
-
 ## Check asterisk
   docker exec -it asterisk asterisk -rvvv
 ## Check registration and end point
@@ -39,6 +38,17 @@ nc -zv 192.168.86.112 8088
   pjsip show endpoints
 ## Record audio using mac OS recorder app and convert to aterisk  compatible 8000 hz wave file , mono, 16 bit, 1 channel
 ffmpeg -i input.m4a -ar 8000 -ac 1 -sample_fmt s16 output.wav
+
+## You may want to use TTS for professional sound, install openTTS image and use below command
+curl -G \
+  --data-urlencode "text=Welcome to our service" \
+  "http://localhost:5500/api/tts?voice=en_US/cmu-arctic-clb" \
+  --output welcome.wav
+## To list available voices
+curl http://localhost:5500/api/voices
+
+## convert to Asterisk compatible
+ffmpeg -i input.wav -ar 8000 -ac 1 -sample_fmt s16 output.wav
 
 ## Copy your wav files to var/lib/asterisk/sounds
 docker cp /path/to/your/file.wav <container_name>:/var/lib/asterisk/sounds/file.wav
