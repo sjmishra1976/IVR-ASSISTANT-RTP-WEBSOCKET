@@ -52,3 +52,12 @@ ffmpeg -i input.wav -ar 8000 -ac 1 -sample_fmt s16 output.wav
 
 ## Copy your wav files to var/lib/asterisk/sounds
 docker cp /path/to/your/file.wav <container_name>:/var/lib/asterisk/sounds/file.wav
+
+## Default music class
+docker exec -it asterisk mkdir -p /var/lib/asterisk/moh/default
+docker cp your_music.wav asterisk:/var/lib/asterisk/moh/default/
+## config needed for musiconhold
+/etc/asterisk/musiconhold.conf
+[default]
+mode=files
+directory=moh/default
