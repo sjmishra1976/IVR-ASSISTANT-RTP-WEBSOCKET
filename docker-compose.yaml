@@ -1,10 +1,46 @@
+version: '3.8'
+
 services:
+
   asterisk:
-    image: andrius/asterisk:latest
-    container_name: sanasterisk
+    image: andrius/asterisk
+    container_name: asterisk
     ports:
-      - "5060:5060/udp"
-      - "8088:8088"
-      - "10000:10000/udp"
-      - "10001:10001/udp"
-      - "10002:10002/udp"
+      - "5060:5060/udp"  # SIP
+      - "5060:5060/tcp"
+      - "8088:8088"      # HTTP for ARI if needed
+    volumes:
+      - ./asterisk/extensions.conf:/etc/asterisk/extensions.conf
+      - ./recordings:/tmp
+    depends_on:
+      - ivr-backend
+      - opentts
+    networks:
+      - ivr-net
+
+  ivr-backend:
+    build:
+      context: .
+      dockerfile: Dockerfile  # see previous Dockerfile with whisper.cpp + llama + backend
+    container_name: ivr-backend
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./models:/models
+      - ./recordings:/tmp
+    environment:
+      - LLAMA_MODEL_PATH=/models/llama-2-7b-chat.Q4_K_M.gguf
+    networks:
+      - ivr-net
+
+  opentts:
+    image: synesthesiam/opentts:latest
+    container_name: opentts
+    ports:
+      - "5500:5500"
+    networks:
+      - ivr-net
+
+networks:
+  ivr-net:
+    driver: bridge

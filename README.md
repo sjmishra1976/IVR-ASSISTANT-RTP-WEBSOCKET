@@ -61,3 +61,22 @@ docker cp your_music.wav asterisk:/var/lib/asterisk/moh/default/
 [default]
 mode=files
 directory=moh/default
+
+
+## RUN Locally
+python3 -m venv venv
+source venv/bin/activate
+FORCE_CMAKE=1 pip install llama-cpp-python
+pip install flask crewai langchain
+
+
+## DOCKER:: Run Locally with Docker
+# Build image
+cd <project_root>/ivr-backend/
+docker build -t ivr-llama-stt .
+
+# DOCKER:: Run container with access to model and audio files
+docker run -p 5000:5000 \
+  -v $(pwd)/models:/models \
+  -v $(pwd)/audio:/audio \
+  ivr-llama-stt
