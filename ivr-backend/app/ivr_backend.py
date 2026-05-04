@@ -25,7 +25,6 @@ try:
         except Exception as e:
             logger.error(f"LLM call failed: {e}")
             return "Sorry, the AI service is currently unavailable."
-
 except Exception as e:
     logger.exception("=== ERROR DURING LLM INITIALIZATION ===")
     def run_llm(prompt: str) -> str:
